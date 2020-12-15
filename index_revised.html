@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Quiz</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="home">
+            <h1>Java Quiz</h1>
+            <p>Try to answer the following questions within 60 seconds! If you answer incorrectly, 8 seconds will be subtracted from the timer.</p>
+            <button id="start-btn">Start Quiz</button>
+        </div>
+        <div class="quizArea">
+            <h3 id="questionArea"></h3>
+            <div>
+            <ul id="optionList">
+                <li id="option-1">1</li>
+                <br>
+                <li id="option-2">2</li>
+                <br>
+                <li id="option-3">3</li>
+                <br>
+                <li id="option-4">4</li>
+            </ul> 
+            </div>
+        </div>
+    </div>
+    <div id="timer"></div>
+    <button id="openBtn">Display Highscores</button>
+    <div class="highscores">
+        <span id="closeBtn">
+            <button>x</button>
+        </span>
+        <ul id="scoresUl"></ul>
+    </div>
+    <script>
+        $(".highscores").hide();
+        var questionList = [
+            { 
+                question: "How many bits are in a byte?",
+                answers: { 
+                  a: "2",
+                  b: "4",
+                  c: "6",
+                  d: "8"
+                },
+                correctAnswer: "8"
+            },
+            
+            { 
+                question: "Who is the father of computer science?",
+                answers: { 
+                  a: "Bill Gates",
+                  b: "Alan Turing",
+                  c: "John von Nuemann",
+                  d: "Larry Page"
+                },
+                correctAnswer: "Alan Turing"
+            },
+            
+            { 
+                question: "Inside which HTML element do we put the JavaScript?",
+                answers: {
+                    a: "script",
+                    b: "jscript",
+                    c: "javascript",
+                    d: "js"
+                },
+                correctAnswer: "script"
+            },
+
+            {
+                question: "Where is the correct place to insert a JavaScript?",
+                answers: {
+                    a: "head and/or body",
+                    b: "head only",
+                    c: "body only",
+                    d: "In between head and body"
+                },
+                correctAnswer: "head and/or body"
+            },
+
+            {
+                question: "Who created JavaScript?",
+                answers: {
+                    a: "Microsoft",
+                    b: "Sun Microsystems",
+                    c: "Oracle",
+                    d: "Netscape"
+                },
+                correctAnswer: "Netscape"
+            },
+
+            {
+                question: "Which of the following is not a reserved word in JavaScript?",
+                answers: {
+                    a: "default",
+                    b: "finally",
+                    c: "throw",
+                    d: "undefined"
+                },
+                correctAnswer: "undefined"
+            },
+        ]
+        var newList = [];
+        var topDog;
+        //Builds highscore if highscores div is hidden
+        var scoreList = [];
+        //SCORELIST IS UNDEFINED FOR SOME REASON
+        //Collapses highscore
+        //Quiz variables
+        var question = document.getElementById("questionArea");
+        var option1 = document.getElementById("option-1");
+        var option2 = document.getElementById("option-2");
+        var option3 = document.getElementById("option-3");
+        var option4 = document.getElementById("option-4");
+        var currentScore = 0;
+        var currentQuestion = 0;
+        var correct;
+        var queuedScore;
+        var currentTime = 61;
+        var scoreList = [];
+        var timer = document.getElementById("timer");
+        var quizCheck = false;
+
+        //Begins quiz IF quiz is hidden + begins timer
+        function startQuiz(){
+            if ($(".quizArea").is(":hidden")){
+                $(".quizArea").show();
+                buildTimer();
+                currentScore = 0;
+                currentQuestion = 0;
+                correct = questionList[currentQuestion].correctAnswer;
+                question.innerHTML = questionList[currentQuestion].question;
+                option1.innerHTML = questionList[currentQuestion].answers.a;
+                option2.innerHTML = questionList[currentQuestion].answers.b;
+                option3.innerHTML = questionList[currentQuestion].answers.c;
+                option4.innerHTML = questionList[currentQuestion].answers.d;
+            }
+        }
+        //Closes quiz, does NOT check if quiz is visible
+        function collapseQuiz(){
+            $(".quizArea").hide();
+        }      
+        //Manages current quiz question + runs quizIsOver() / Key function in ending quiz when time comes
+        function nextQuestion(){
+            //Run quizIsOver() to check if quiz has hit last question before proceeding
+            if (quizIsOver() == false){
+                currentQuestion++;
+                correct = questionList[currentQuestion].correctAnswer;
+                question.innerHTML = questionList[currentQuestion].question;
+                option1.innerHTML = questionList[currentQuestion].answers.a;
+                option2.innerHTML = questionList[currentQuestion].answers.b;
+                option3.innerHTML = questionList[currentQuestion].answers.c;
+                option4.innerHTML = questionList[currentQuestion].answers.d;
+            }
+            else {
+                ("over!");
+                collapseTimer();
+                collapseQuiz();
+                saveScore();
+            }
+        }
+        //Checks if user's answer is right or wrong, if right -> nextQuestion() / if wrong -> nextQuestion() + timer-8
+        function rightOrWrong(A){
+            if (A === correct){
+                currentScore++;
+                ("correct "+ currentScore);
+                nextQuestion();
+            }
+            else {
+                currentTime = currentTime-8;
+                currentScore--;
+                ("incorrect " + currentScore);
+                nextQuestion();
+            }
+        }
+        //Checks if quiz is over
+        function quizIsOver(){
+            ("length: " + questionList.length);
+            ("current: " + currentQuestion);
+            if (questionList.length-1 != currentQuestion){
+                return false;
+            }
+            else {return true;}
+        }
+        //Resets quiz related variables
+        function resetVars(){
+            currentScore = 0;
+            currentQuestion = 0;
+            queuedScore = "";
+            collapseTimer();
+        }
+        //Prompt user for initials, save initials + currentScore to local storage, then to scoreList
+        function saveScore(){
+            var initials = prompt("Quiz is over! Your score is " + currentScore + ". Enter initials to save to highscores!");
+            if (initials == null || initials.length != 2){
+                alert("Error! Please only enter two characters (ie. your initials)");
+                saveScore();
+            }
+            else {
+                const score = {name: initials, num: currentScore};
+                localStorage.setItem("score", JSON.stringify(score));
+                const newScore = JSON.parse(localStorage.getItem("score"));
+                scoreList.push(newScore);
+                (scoreList);
+                resetVars();
+            }
+        }
+        //Timer Begins
+        function timerStart(){
+            currentTime = currentTime-1;
+            timer.innerHTML = currentTime;
+            if (currentTime > -1){
+                if (currentTime == 0){
+                    collapseTimer();
+                    $(".quizArea").hide();
+                    saveScore();
+                }
+                else {setTimeout(timerStart, 1000);}
+            }
+        }
+        //Build Timer
+        function buildTimer(){
+            currentTime = 61;
+            timer.style.color = "black";
+            timer.innerHTML = currentTime;
+            timerStart();
+            ("Timer built!");
+        }
+        //Collapse Timer
+        function collapseTimer(){
+            currentTime = null;
+            timer.style.color = "white";
+            ("Timer collapsed!");
+        }
+        //Hide quiz by default
+        collapseQuiz();
+        //Open quiz when start-btn is clicked
+        $("#start-btn").on("click", function(){
+            startQuiz();
+        }); 
+        option1.onclick = function(){
+            rightOrWrong(this.textContent);
+        }
+        option2.onclick = function(){
+            rightOrWrong(this.textContent);
+        }
+        option3.onclick = function(){
+            rightOrWrong(this.textContent);
+        }
+        option4.onclick = function(){
+            rightOrWrong(this.textContent);         
+        }
+        
+        function buildHighscores(){
+            $(".highscores").show();
+            for (var i = 0; i < scoreList.length; i++){
+                const scoreUl = "<li>" + scoreList[i].name + ": " + scoreList[i].num + "</li>";
+                console.log(scoreUl); 
+                $("#scoresUl").append(scoreUl);
+            }
+        }
+
+        $("#openBtn").on("click", function(){
+            buildHighscores();
+            $("#openBtn").hide();
+            $("#closeBtn").show();
+        });
+
+        $("#closeBtn").on("click", function(){
+            $("#scoresUl").empty();
+            $("#openBtn").show();
+            $(".highscores").hide();
+            $("#closeBtn").hide();
+        });
+    </script>
+
+</body>
+</html>

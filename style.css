@@ -1,0 +1,120 @@
+html{
+    min-height: 100%;
+    position: relative;
+}
+body{
+    height: 100%;
+}
+
+.home {
+    text-align: center;
+    margin-top: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    border: 1px solid rgba(156, 156, 156, 0.75);
+    border-radius: 5px; 
+    background-color: #dedede;
+    font-family: "Tahoma";
+}
+
+.home p {
+    margin-top: 25px;
+}
+
+
+#start-btn {
+    font-size: 85%;
+    padding-bottom: 1px;
+    height: 30px;
+    width: 110px;
+    font-family: "Tahoma";
+    color: white;
+    background-color: #13599c;
+    border: solid 1px;
+    border-color: black;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+#scoresView {
+    display: block;
+    border: 1px solid black;
+    display: none;
+    width: 150px;
+    height: 75px;
+    margin-left: 5px;
+}
+
+.quizArea {
+    text-align: center;
+    margin-top: 100px;
+    display: block;
+    margin-left: 92px;
+    margin-right: auto;
+    width: 80%;
+    border: 1px solid rgba(156, 156, 156, 0.75);
+    border-radius: 5px; 
+    background-color: #dedede;
+}
+
+.quizArea h3 {
+    font-family: "Tahoma";
+    text-align: left;
+    margin-left: 10%;
+}
+
+.quizArea ul {
+    font-family: "Tahoma";
+    text-align: left;
+    list-style-type: none;    
+}
+
+.quizArea li {
+    list-style-type: none;
+    border: solid black 1px;
+    border-radius: 5px;
+    height: 25px;
+    display: inline-block;
+    margin: 3px;
+    padding-top: 3px;
+    padding-inline: 10px;
+    background-color: #99eb36;
+    font-family: "Tahoma";
+}
+
+
+
+#timer {
+    font-family: "Tahoma";
+    font-size: 150%;
+    display: inline;
+    margin-left: 95%;
+    margin-right: auto;
+    
+}
+
+#closeBtn {
+    display: inline;
+    padding: 5px;
+    margin-left: 3px;
+}
+
+.highscores {
+    font-family: inherit;
+    display: block;
+    width: 100px;
+    height: 100px;
+    border: 1px red solid;
+    margin-left: 15%;
+    margin-right: 85%;
+}
+
+#openBtn {
+    margin-left: 15%;
+    margin-right: auto;
+    margin-bottom: 5px;
+    display: block;
+}
